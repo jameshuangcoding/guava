@@ -15,23 +15,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # One job per suite, run in parallel.
-  test:
-    name: ${{ matrix.suite }}
+  # Every suite in one job, so pull requests have a single tests check.
+  tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    strategy:
-      # Let the other suites finish when one fails.
-      fail-fast: false
-      # What each suite needs besides dependencies.
-      matrix:
-        include:
-          - suite: unit
-          - suite: integration
-            databases: true
-          - suite: e2e
-            databases: true
-            browser: true
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,18 +36,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Start test databases
-        if: matrix.databases
         run: pnpm test:db:up
 
       - name: Install Chromium
-        if: matrix.browser
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Run ${{ matrix.suite }} tests
-        run: pnpm test:${{ matrix.suite }}
+      # Vitest (unit and integration) and Playwright run at the same time.
+      # They use separate workspace databases, so they don't collide.
+      - name: Run tests
+        run: pnpm test:all
 
       - name: Upload Playwright report
-        if: matrix.browser && !cancelled()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
