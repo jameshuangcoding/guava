@@ -70,7 +70,7 @@ Unit tests sit next to the code they cover (`lib/**/*.test.ts`). Integration and
 
 The test databases come from `compose.test.yaml`. Setting `NEON_LOCAL_PROXY` points the app's Neon driver at the local proxy, so the tests exercise the same code as production. `tests/env.ts` builds the test settings at runtime and passes them over `.env`, so tests never touch real databases. The database password is random, created on the first `pnpm test:db:up` in `tests/db/.password` (gitignored).
 
-CI runs the unit, integration and e2e suites in parallel on every pull request and on pushes to `main`, alongside Prettier, ESLint, typecheck and commitlint.
+CI runs the unit, integration and e2e suites in parallel on every pull request and on pushes to `main`, alongside Prettier, ESLint and typecheck. PR titles are checked against Conventional Commits.
 
 ## Scripts
 
@@ -88,7 +88,7 @@ CI runs the unit, integration and e2e suites in parallel on every pull request a
 
 ## Contributing
 
-Commit messages follow [Conventional Commits](https://www.conventionalcommits.org), checked by commitlint in CI. [release-please](https://github.com/googleapis/release-please) reads them to open a release pull request that bumps the version and updates `CHANGELOG.md`.
+Pull requests are squash merged, so the PR title becomes the commit on `main`. Titles follow [Conventional Commits](https://www.conventionalcommits.org) (for example `feat(expenses): add a date filter`), checked in CI. [release-please](https://github.com/googleapis/release-please) reads these commits to open a release pull request that bumps the version and updates `CHANGELOG.md`.
 
 ## Known gaps
 
