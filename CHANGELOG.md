@@ -1,5 +1,50 @@
 # Changelog
 
+## [0.1.1](https://github.com/jameshuangcoding/guava/compare/v0.1.0...v0.1.1) (2026-11-16)
+
+
+### Refactors
+
+* **db:** configure Neon's driver in one place ([56a2235](https://github.com/jameshuangcoding/guava/commit/56a22352079a28455c3cd36db985ecc50f6ed304))
+
+
+### Documentation
+
+* add contributing guide and security policy ([#90](https://github.com/jameshuangcoding/guava/issues/90)) ([3b2e4e1](https://github.com/jameshuangcoding/guava/commit/3b2e4e16db359192e6c41e01a2936bb9e5565866))
+* mention the lint checks in the README ([455b6a8](https://github.com/jameshuangcoding/guava/commit/455b6a8b7c265fbe9132572ec6736aab6439ee27))
+* rewrite the README ([bafd1aa](https://github.com/jameshuangcoding/guava/commit/bafd1aa827151e9cef4c88d48f7abca88ef20c01))
+* rewrite the README ([5bc55e9](https://github.com/jameshuangcoding/guava/commit/5bc55e9bc7f8b2f067e44b9212ff436b31ba0ccc))
+
+
+### CI
+
+* flag what each test suite needs in the matrix ([aac10d4](https://github.com/jameshuangcoding/guava/commit/aac10d4a716e067add40f43f28b4047f90482fc5))
+* inline the setup steps in the test workflow ([7da4ba2](https://github.com/jameshuangcoding/guava/commit/7da4ba2a3427060684db3a81433a5153182029b7))
+* lint PR titles instead of every commit ([#88](https://github.com/jameshuangcoding/guava/issues/88)) ([5a36cd9](https://github.com/jameshuangcoding/guava/commit/5a36cd99e65e9fca8d4ddacaac5174115b7bd6e4))
+* lowercase the lint and test workflow names ([20126e8](https://github.com/jameshuangcoding/guava/commit/20126e80330a270738ca50cf1bd0576a08ba7599))
+* move commitlint into the lint workflow ([6bd4ce3](https://github.com/jameshuangcoding/guava/commit/6bd4ce3c746d181f5d7e1460a0643a04c4ececa6))
+* run ESLint and typecheck alongside Prettier ([326ca5b](https://github.com/jameshuangcoding/guava/commit/326ca5b1d12563dc1393a2b9c1a2e6199d1df426))
+* run ESLint, typecheck and commitlint in one lint workflow ([9a1403c](https://github.com/jameshuangcoding/guava/commit/9a1403cca3e550d7023ebdc050c2a73ddbdb01e4))
+* run the test suites from one matrix job ([02508db](https://github.com/jameshuangcoding/guava/commit/02508db6c3046666474e888643d24d53db75f685))
+* run unit, integration and e2e tests ([3d74df0](https://github.com/jameshuangcoding/guava/commit/3d74df02e923ad64d2fc4b04daa429f9f4cc49e3))
+* run unit, integration and e2e tests in parallel ([6228d87](https://github.com/jameshuangcoding/guava/commit/6228d87d53c46e413fc263e4aaf4888212353ee3))
+
+
+### Tests
+
+* add unit, integration and e2e tests ([63d57a1](https://github.com/jameshuangcoding/guava/commit/63d57a12e39f6dd991dcb68165272f7c6545e042))
+
+
+### Chores
+
+* add a pull request template ([#91](https://github.com/jameshuangcoding/guava/issues/91)) ([d44a176](https://github.com/jameshuangcoding/guava/commit/d44a176c464dce9d6ef57eb8cbd4a0883c8e621b))
+* add feature, bug and idea issue templates ([32a2552](https://github.com/jameshuangcoding/guava/commit/32a2552d69378fecaf4be01fadfbf49a9565a87f))
+* add feature, bug and idea issue templates ([cc2d049](https://github.com/jameshuangcoding/guava/commit/cc2d0499cf56dd6476527d5d9e8192cbe53f29a1))
+* add MIT license ([#87](https://github.com/jameshuangcoding/guava/issues/87)) ([4eb9139](https://github.com/jameshuangcoding/guava/commit/4eb9139a726b774aacc7c7e1f2c09c325e629c20))
+* **plaid:** remove the stub webhook route ([bfcc1ae](https://github.com/jameshuangcoding/guava/commit/bfcc1aef7441441118380b772f8ededbc8e01e88))
+* remove dead code and the stub Plaid webhook ([9665357](https://github.com/jameshuangcoding/guava/commit/96653574dd8b8ed31222d78f19de73dae774085c))
+* remove dead code and unused dependencies ([957cb7b](https://github.com/jameshuangcoding/guava/commit/957cb7bb113beb09a02fffe9e7d820e3870853ef))
+
 ## 0.1.0 (2026-10-28)
 
 
