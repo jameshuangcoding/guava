@@ -15,10 +15,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Every suite in one job, so pull requests have a single tests check.
-  tests:
+  # One job per suite, run in parallel. Each shows as its own check.
+  test:
+    name: ${{ matrix.suite }}
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
+    strategy:
+      # Let the other suites finish when one fails.
+      fail-fast: false
+      # What each suite needs besides dependencies.
+      matrix:
+        include:
+          - suite: unit
+          - suite: integration
+            databases: true
+          - suite: e2e
+            databases: true
+            browser: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,20 +49,35 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Start test databases
+        if: matrix.databases
         run: pnpm test:db:up
 
       - name: Install Chromium
+        if: matrix.browser
         run: pnpm exec playwright install --with-deps chromium
 
-      # Vitest (unit and integration) and Playwright run at the same time.
-      # They use separate workspace databases, so they don't collide.
-      - name: Run tests
-        run: pnpm test:all
+      - name: Run ${{ matrix.suite }} tests
+        run: pnpm test:${{ matrix.suite }}
 
       - name: Upload Playwright report
-        if: ${{ !cancelled() }}
+        if: matrix.browser && !cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
+
+  # The single check branch protection requires: passes only when every
+  # suite passed. Runs even when one fails, so it never shows as skipped.
+  tests:
+    if: ${{ always() }}
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check every suite passed
+        run: |
+          if [ "${{ needs.test.result }}" != "success" ]; then
+            echo "A test suite did not pass (result: ${{ needs.test.result }})."
+            exit 1
+          fi

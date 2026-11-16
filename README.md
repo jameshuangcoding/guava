@@ -63,7 +63,7 @@ pnpm test:unit                 # Vitest, no database
 pnpm test:db:up                # Postgres behind Neon's local proxy, in Docker
 pnpm test:integration          # Vitest against the test databases
 pnpm test:e2e                  # Builds the app and runs Playwright
-pnpm test:all                  # All of the above at once
+pnpm test:all                  # Vitest, then Playwright
 pnpm test:db:down
 ```
 
