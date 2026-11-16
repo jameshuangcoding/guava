@@ -23,7 +23,7 @@ Closes #
 
 <!-- What you ran and what you checked by hand. -->
 
-- [ ] `pnpm lint`, `pnpm typecheck` and `pnpm test:all` pass locally
+- [ ] `pnpm lint`, `pnpm typecheck` and the test suites pass locally
 - [ ]
 
 ## Notes for reviewers
