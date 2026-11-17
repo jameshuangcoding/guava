@@ -88,7 +88,7 @@ CI runs the unit, integration and e2e suites in parallel on every pull request a
 
 ## Contributing
 
-Pull requests are squash merged, so the PR title becomes the commit on `main`. Titles follow [Conventional Commits](https://www.conventionalcommits.org) (for example `feat(expenses): add a date filter`), checked in CI. [release-please](https://github.com/googleapis/release-please) reads these commits to open a release pull request that bumps the version and updates `CHANGELOG.md`.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Releases are automated by [release-please](https://github.com/googleapis/release-please), which builds `CHANGELOG.md` from merged PR titles.
 
 ## Known gaps
 
