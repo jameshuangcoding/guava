@@ -37,3 +37,11 @@ export function userDbClient(connectionString: string): UserDb {
   }
   return client;
 }
+
+/** Drops and disconnects the cached client for a database, if there is one. */
+export function forgetUserDbClient(connectionString: string): void {
+  const client = clients.get(connectionString);
+  if (!client) return;
+  clients.delete(connectionString);
+  void client.$disconnect();
+}
