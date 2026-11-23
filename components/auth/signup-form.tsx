@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Check, Loader2 } from "lucide-react";
 
 import { Field } from "@/components/guava/field";
+import { LegalLinks } from "@/components/legal/legal-links";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -230,7 +231,18 @@ export function SignupForm() {
             htmlFor="signup-terms"
             className="text-[13px] leading-[1.45] font-normal text-ink-2"
           >
-            I agree to the Terms of Service and Privacy Policy.
+            {/* New tab, so following a link doesn't clear the form. */}
+            <span>
+              I agree to the{" "}
+              <Link href="/terms" target="_blank" className={authLinkClass}>
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" target="_blank" className={authLinkClass}>
+                Privacy Policy
+              </Link>
+              .
+            </span>
           </Label>
         </div>
         {showTermsErr && (
@@ -253,6 +265,8 @@ export function SignupForm() {
           Log in
         </Link>
       </p>
+
+      <LegalLinks className="justify-center" />
     </form>
   );
 }

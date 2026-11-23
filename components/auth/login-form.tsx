@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 
 import { Field } from "@/components/guava/field";
+import { LegalLinks } from "@/components/legal/legal-links";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -128,6 +129,8 @@ export function LoginForm({ defaultEmail }: { defaultEmail: string }) {
           Create an account
         </Link>
       </p>
+
+      <LegalLinks className="justify-center" />
     </form>
   );
 }

@@ -46,6 +46,33 @@ test("signup blocks mismatched passwords", async ({ page }) => {
   await expect(page).toHaveURL(/\/signup$/);
 });
 
+test("signed-out visitors can read the terms and privacy policy", async ({
+  page,
+}) => {
+  for (const [path, title] of [
+    ["/terms", "Terms of Service"],
+    ["/privacy", "Privacy Policy"],
+  ]) {
+    await page.goto(path);
+    await expect(page).toHaveURL(new RegExp(`${path}$`));
+    await expect(
+      page.getByRole("heading", { level: 1, name: title }),
+    ).toBeVisible();
+  }
+
+  // Linked from the login and signup footers.
+  for (const path of ["/login", "/signup"]) {
+    await page.goto(path);
+    const legal = page.getByRole("navigation", { name: "Legal" });
+    await expect(
+      legal.getByRole("link", { name: "Terms of Service" }),
+    ).toHaveAttribute("href", "/terms");
+    await expect(
+      legal.getByRole("link", { name: "Privacy Policy" }),
+    ).toHaveAttribute("href", "/privacy");
+  }
+});
+
 test("sign up, connect a database, and open expenses", async ({ page }) => {
   await signUp(page, uniqueEmail());
   await expect(

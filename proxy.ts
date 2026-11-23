@@ -1,12 +1,14 @@
 import { getSessionCookie } from "better-auth/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Pages for signed-out visitors. Everything else needs a session.
+// Pages anyone can open signed out. Everything else needs a session.
 const GUEST_ROUTES = [
   "/login",
   "/signup",
   "/forgot-password",
   "/reset-password",
+  "/terms",
+  "/privacy",
 ];
 
 /**
