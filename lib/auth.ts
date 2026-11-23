@@ -37,6 +37,10 @@ function createAuth() {
       // A reset signs out every device, in case someone else was signed in.
       revokeSessionsOnPasswordReset: true,
     },
+    // Settings > Account. Deleting a user cascades to their sessions, login
+    // methods and workspace row (prisma/schema.prisma); their own Neon
+    // database is left alone.
+    user: { deleteUser: { enabled: true } },
     // Lets auth.api calls in Server Actions set cookies. Must stay last.
     plugins: [nextCookies()],
   });

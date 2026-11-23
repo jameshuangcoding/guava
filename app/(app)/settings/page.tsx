@@ -1,14 +1,10 @@
-import { PreferencesCard } from "@/components/settings/preferences-card";
-import { Page, PageHeader } from "@/components/shell/page";
+import type { Metadata } from "next";
 
-export default function SettingsPage() {
-  return (
-    <Page width="narrow">
-      <PageHeader
-        title="Settings"
-        subtitle="How guava sorts new transactions."
-      />
-      <PreferencesCard />
-    </Page>
-  );
+import { PreferencesCard } from "@/components/settings/preferences-card";
+
+export const metadata: Metadata = { title: "Settings · guava" };
+
+/** Settings > General: how guava sorts new transactions, and appearance. */
+export default function GeneralSettingsPage() {
+  return <PreferencesCard />;
 }
