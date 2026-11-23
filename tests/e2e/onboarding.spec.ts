@@ -15,6 +15,7 @@ async function signUp(page: Page, email: string) {
   await page.getByLabel("Full name").fill("Buzz Peterson");
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password", { exact: true }).fill(LOGIN);
+  await page.getByLabel("Confirm password", { exact: true }).fill(LOGIN);
   await page.getByLabel(/I agree to the Terms/).check();
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page).toHaveURL(/\/connect$/);
@@ -31,6 +32,18 @@ async function connectDatabase(page: Page) {
 test("signed-out visitors are sent to log in", async ({ page }) => {
   await page.goto("/expenses");
   await expect(page).toHaveURL(/\/login$/);
+});
+
+test("signup blocks mismatched passwords", async ({ page }) => {
+  await page.goto("/signup");
+  await page.getByLabel("Full name").fill("Buzz Peterson");
+  await page.getByLabel("Email").fill(uniqueEmail());
+  await page.getByLabel("Password", { exact: true }).fill(LOGIN);
+  await page.getByLabel("Confirm password", { exact: true }).fill(`${LOGIN}x`);
+  await page.getByLabel(/I agree to the Terms/).check();
+  await page.getByRole("button", { name: "Create account" }).click();
+  await expect(page.getByText("Passwords don’t match.")).toBeVisible();
+  await expect(page).toHaveURL(/\/signup$/);
 });
 
 test("sign up, connect a database, and open expenses", async ({ page }) => {

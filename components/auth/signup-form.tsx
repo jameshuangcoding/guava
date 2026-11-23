@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { isEmailRegistered, signUp } from "@/lib/auth-actions";
 import {
+  confirmPasswordError,
   EMAIL_MAX,
   emailError,
   NAME_MAX,
@@ -30,6 +31,9 @@ export function SignupForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  // The mismatch error shows once they leave the field, not mid-typing.
+  const [confirmTouched, setConfirmTouched] = useState(false);
   const [terms, setTerms] = useState(false);
   const [tried, setTried] = useState(false);
   const [formError, setFormError] = useState("");
@@ -67,6 +71,9 @@ export function SignupForm() {
   const showNameErr = tried && !!nameErr;
   const showEmailErr = (tried && !!formatErr) || taken;
   const showPwErr = tried && !pwOk;
+  const confirmErr = confirmPasswordError(password, confirm);
+  const showConfirmErr =
+    !!confirmErr && (tried || (confirmTouched && !!confirm));
   const showTermsErr = tried && !terms;
 
   const emailMessage = taken ? (
@@ -87,10 +94,15 @@ export function SignupForm() {
     e.preventDefault();
     setTried(true);
     setFormError("");
-    if (nameErr || formatErr || taken || !pwOk || !terms) return;
+    if (nameErr || formatErr || taken || !pwOk || confirmErr || !terms) return;
     startTransition(async () => {
       // Redirects to step 2 (connect your database) on success.
-      const result = await signUp({ name, email, password });
+      const result = await signUp({
+        name,
+        email,
+        password,
+        confirmPassword: confirm,
+      });
       if (result.emailTaken) {
         setTakenEmails((list) => [...list, normalized]);
       } else if (result.formError) {
@@ -187,6 +199,23 @@ export function SignupForm() {
           })}
         </ul>
       </div>
+
+      <Field
+        label="Confirm password"
+        htmlFor="signup-confirm-password"
+        error={showConfirmErr ? confirmErr : undefined}
+      >
+        <PasswordInput
+          id="signup-confirm-password"
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          onBlur={() => setConfirmTouched(true)}
+          placeholder="Type it again"
+          autoComplete="new-password"
+          revealLabel="password confirmation"
+          aria-invalid={showConfirmErr || undefined}
+        />
+      </Field>
 
       <div className="flex flex-col gap-2">
         <div className="flex items-start gap-2.5">

@@ -27,3 +27,13 @@ export const PASSWORD_RULES = [
 export function passwordOk(pw: string): boolean {
   return pw.length <= PASSWORD_MAX && PASSWORD_RULES.every((r) => r.test(pw));
 }
+
+/** The field error for "Confirm password", or "" when it matches. */
+export function confirmPasswordError(
+  password: string,
+  confirm: string,
+): string {
+  if (!confirm) return "Confirm your password.";
+  if (confirm !== password) return "Passwords don’t match.";
+  return "";
+}
