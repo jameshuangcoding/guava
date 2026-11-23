@@ -69,15 +69,36 @@ test("sign up, connect a database, and open expenses", async ({ page }) => {
   }
 });
 
+async function logIn(page: Page, email: string, rememberMe: boolean) {
+  await page.context().clearCookies();
+  await page.goto("/login");
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Password", { exact: true }).fill(LOGIN);
+  // Checked by default.
+  await expect(page.getByLabel("Remember me")).toBeChecked();
+  await page.getByLabel("Remember me").setChecked(rememberMe);
+  await page.getByRole("button", { name: /log in/i }).click();
+  await expect(page).toHaveURL(/\/$/);
+}
+
+/** The session cookie's expiry in seconds, or -1 for a browser-session cookie. */
+async function sessionCookieExpiry(page: Page) {
+  const cookies = await page.context().cookies();
+  const session = cookies.find((c) => c.name.endsWith("session_token"));
+  expect(session).toBeDefined();
+  return session!.expires;
+}
+
 test("log out and back in", async ({ page }) => {
   const email = uniqueEmail();
   await signUp(page, email);
   await connectDatabase(page);
-  await page.context().clearCookies();
 
-  await page.goto("/login");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password", { exact: true }).fill(LOGIN);
-  await page.getByRole("button", { name: /log in/i }).click();
-  await expect(page).toHaveURL(/\/$/);
+  // Remembered: the cookie outlives the browser.
+  await logIn(page, email, true);
+  expect(await sessionCookieExpiry(page)).toBeGreaterThan(0);
+
+  // Not remembered: the cookie ends when the browser closes.
+  await logIn(page, email, false);
+  expect(await sessionCookieExpiry(page)).toBe(-1);
 });
