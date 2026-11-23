@@ -36,5 +36,8 @@ export function readTestEnv(): Record<string, string> {
     // Fresh each run: nothing outlives the test databases.
     BETTER_AUTH_SECRET: key(),
     ENCRYPTION_KEY: key(),
+    // Empty, not unset, so a key in .env can't win: tests never send real
+    // email. lib/email.ts prints it to the console instead.
+    RESEND_API_KEY: "",
   };
 }

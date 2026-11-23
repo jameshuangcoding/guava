@@ -26,13 +26,15 @@ Copy the example environment file and fill it in:
 cp .env.example .env
 ```
 
-| Variable             | Value                                                                         |
-| -------------------- | ----------------------------------------------------------------------------- |
-| `DATABASE_URL`       | Neon console → Connect → pooled connection string for the app database        |
-| `DIRECT_URL`         | The same string with pooling off, used by Prisma migrations                   |
-| `BETTER_AUTH_SECRET` | `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
-| `BETTER_AUTH_URL`    | The app's URL, such as `http://localhost:3000`                                |
-| `ENCRYPTION_KEY`     | Same command as `BETTER_AUTH_SECRET`, with a different value                  |
+| Variable             | Value                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| `DATABASE_URL`       | Neon console → Connect → pooled connection string for the app database               |
+| `DIRECT_URL`         | The same string with pooling off, used by Prisma migrations                          |
+| `BETTER_AUTH_SECRET` | `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`        |
+| `BETTER_AUTH_URL`    | The app's URL, such as `http://localhost:3000`                                       |
+| `ENCRYPTION_KEY`     | Same command as `BETTER_AUTH_SECRET`, with a different value                         |
+| `RESEND_API_KEY`     | Resend → API Keys. Optional locally: emails are printed to the console instead       |
+| `EMAIL_FROM`         | The sender, such as `guava <noreply@yourdomain.com>`, on a domain verified in Resend |
 
 `ENCRYPTION_KEY` encrypts stored connection strings and Plaid keys. Changing it makes saved data unreadable, so every environment that shares an app database must use the same value.
 
