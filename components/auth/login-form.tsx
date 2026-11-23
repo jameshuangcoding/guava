@@ -6,7 +6,9 @@ import { Loader2 } from "lucide-react";
 
 import { Field } from "@/components/guava/field";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { logIn } from "@/lib/auth-actions";
 import { EMAIL_MAX, emailError } from "@/lib/auth-validation";
 import { cn } from "@/lib/utils";
@@ -17,6 +19,7 @@ import { PasswordInput } from "./password-input";
 export function LoginForm({ defaultEmail }: { defaultEmail: string }) {
   const [email, setEmail] = useState(defaultEmail);
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
   // Field errors show after a submit attempt.
   const [tried, setTried] = useState(false);
   const [formError, setFormError] = useState("");
@@ -34,7 +37,7 @@ export function LoginForm({ defaultEmail }: { defaultEmail: string }) {
     if (emailErr || passwordErr) return;
     startTransition(async () => {
       // Redirects to the dashboard on success.
-      const result = await logIn({ email, password });
+      const result = await logIn({ email, password, rememberMe });
       if (result.formError) setFormError(result.formError);
     });
   }
@@ -97,6 +100,20 @@ export function LoginForm({ defaultEmail }: { defaultEmail: string }) {
           aria-invalid={showPasswordErr || undefined}
         />
       </Field>
+
+      <div className="flex items-center gap-2.5">
+        <Checkbox
+          id="login-remember"
+          checked={rememberMe}
+          onCheckedChange={(v) => setRememberMe(v === true)}
+        />
+        <Label
+          htmlFor="login-remember"
+          className="text-[13px] font-normal text-ink-2"
+        >
+          Remember me
+        </Label>
+      </div>
 
       {formError && <FormError>{formError}</FormError>}
 

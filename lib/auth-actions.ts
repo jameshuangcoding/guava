@@ -46,16 +46,22 @@ export async function isEmailRegistered(email: string): Promise<boolean> {
 export async function logIn(input: {
   email: string;
   password: string;
+  /** false: the session cookie ends when the browser closes. */
+  rememberMe: boolean;
 }): Promise<AuthFormResult> {
-  const { email, password } = input;
-  if (typeof email !== "string" || typeof password !== "string") {
+  const { email, password, rememberMe } = input;
+  if (
+    typeof email !== "string" ||
+    typeof password !== "string" ||
+    typeof rememberMe !== "boolean"
+  ) {
     return { formError: GENERIC_ERROR };
   }
   if (emailError(email) || !password) return { formError: GENERIC_ERROR };
 
   try {
     await getAuth().api.signInEmail({
-      body: { email: normalizeEmail(email), password },
+      body: { email: normalizeEmail(email), password, rememberMe },
       headers: await headers(),
     });
   } catch (error) {
