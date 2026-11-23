@@ -35,6 +35,11 @@ async function logIn(page: Page, email: string, password: string) {
 test("change the display name", async ({ page }) => {
   await signUpAndConnect(page, uniqueEmail());
   await page.goto("/settings");
+  await page
+    .getByRole("navigation", { name: "Settings" })
+    .getByRole("link", { name: "Account" })
+    .click();
+  await expect(page).toHaveURL(/\/settings\/account$/);
 
   await page.getByLabel("Display name").fill("Mango Peterson");
   await page.getByRole("button", { name: "Save", exact: true }).click();
@@ -47,7 +52,7 @@ test("change the display name", async ({ page }) => {
 test("change the password", async ({ page }) => {
   const email = uniqueEmail();
   await signUpAndConnect(page, email);
-  await page.goto("/settings");
+  await page.goto("/settings/account");
 
   await page.getByLabel("Current password").fill("wrong-123");
   await page.getByLabel("New password", { exact: true }).fill(NEW_LOGIN);
@@ -68,7 +73,7 @@ test("change the password", async ({ page }) => {
 test("delete the account", async ({ page }) => {
   const email = uniqueEmail();
   await signUpAndConnect(page, email);
-  await page.goto("/settings");
+  await page.goto("/settings/account");
 
   await page.getByRole("button", { name: "Delete account" }).click();
   const dialog = page.getByRole("dialog");
