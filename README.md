@@ -8,7 +8,7 @@ Built with Next.js 16 (App Router, React 19), Tailwind CSS v4 and shadcn/ui, Pri
 
 ## Prerequisites
 
-- Node.js 26 (the exact version is in `.nvmrc`; run `nvm use`) and pnpm
+- Node.js 24 (the exact version is in `.nvmrc`; run `nvm use`) and pnpm
 - A [Neon](https://neon.tech) project with two databases: one for the app, one to connect as your workspace
 - Docker, to run the integration and e2e tests
 
