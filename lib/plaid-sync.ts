@@ -5,9 +5,14 @@ import type { PlaidApi, RemovedTransaction, Transaction } from "plaid";
 import type { Prisma } from "@/generated/user-prisma/client";
 
 import { decrypt } from "@/lib/crypto";
-import { dateToDb } from "@/lib/guava/server/snapshot";
+import { dateFromDb, dateToDb } from "@/lib/guava/server/snapshot";
 import { plaidErrorCode } from "@/lib/plaid";
 import { mapTransaction, type ImportedExpense } from "@/lib/plaid-mapping";
+import {
+  billSearchRange,
+  findRecurringBill,
+  type NewCharge,
+} from "@/lib/recurring-bills";
 import type { UserDb } from "@/lib/user-db/client";
 
 export type SyncCounts = {
@@ -59,9 +64,46 @@ async function fetchChanges(
 }
 
 /**
+ * For each new charge, last month's reviewed copy of it (see
+ * lib/recurring-bills.ts), when "Auto-review recurring bills" is on. It's on
+ * unless the user turned it off.
+ */
+async function recurringBills(db: UserDb, charges: NewCharge[]) {
+  const range = billSearchRange(charges);
+  if (!range) return [];
+  const settings = await db.settings.findUnique({
+    where: { id: 1 },
+    select: { autoCategorizeBills: true },
+  });
+  if (!(settings?.autoCategorizeBills ?? true)) return [];
+  const reviewed = (
+    await db.expense.findMany({
+      where: {
+        deletedAt: null,
+        needsReview: false,
+        categoryId: { not: null },
+        amountCents: { in: [...new Set(charges.map((c) => c.amountCents))] },
+        date: { gte: dateToDb(range.from), lte: dateToDb(range.to) },
+      },
+      select: {
+        date: true,
+        name: true,
+        amountCents: true,
+        bankAccountId: true,
+        categoryId: true,
+        subcategoryId: true,
+      },
+    })
+  ).map((e) => ({ ...e, date: dateFromDb(e.date), categoryId: e.categoryId! }));
+  return charges.map((c) => findRecurringBill(c, reviewed));
+}
+
+/**
  * Syncs one bank connection into the user's database.
  *
- * New transactions become uncategorized expenses that need review. Changes
+ * New transactions become uncategorized expenses that need review, except
+ * recurring bills the user reviewed last month, which take that expense's
+ * category and skip review (see `recurringBills`). Changes
  * from the bank update only the amount, date, account and bank category, so
  * a name, category, note or "counts as spending" choice the user made is kept. A posted transaction that replaces
  * a pending one takes over the pending expense, keeping the user's edits.
@@ -126,6 +168,8 @@ export async function syncItem(
 
   const counts: SyncCounts = { added: 0, updated: 0, removed: 0, restored: 0 };
   const creates: Prisma.ExpenseCreateManyInput[] = [];
+  // Index-aligned with `creates`, for matching recurring bills.
+  const newCharges: NewCharge[] = [];
   const updates: { id: string; data: Prisma.ExpenseUncheckedUpdateInput }[] =
     [];
   // A deleted pending transaction's posted id, so it stays deleted too.
@@ -178,8 +222,22 @@ export async function syncItem(
         plaidTransactionId: u.plaidTransactionId,
         needsReview: true,
       });
+      newCharges.push({
+        date: u.date,
+        name: u.name,
+        amountCents: u.amountCents,
+        bankAccountId: fields.bankAccountId,
+        spending: u.spending,
+      });
     }
   }
+  const bills = await recurringBills(db, newCharges);
+  bills.forEach((bill, i) => {
+    if (!bill) return;
+    creates[i].categoryId = bill.categoryId;
+    creates[i].subcategoryId = bill.subcategoryId;
+    creates[i].needsReview = false;
+  });
   for (const u of upserts) deletes.delete(u.plaidTransactionId);
 
   await db.$transaction(
