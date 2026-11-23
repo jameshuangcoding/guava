@@ -16,7 +16,6 @@ async function signUp(page: Page, email: string) {
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password", { exact: true }).fill(LOGIN);
   await page.getByLabel("Confirm password", { exact: true }).fill(LOGIN);
-  await page.getByLabel(/I agree to the Terms/).check();
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page).toHaveURL(/\/connect$/);
 }
@@ -40,7 +39,6 @@ test("signup blocks mismatched passwords", async ({ page }) => {
   await page.getByLabel("Email").fill(uniqueEmail());
   await page.getByLabel("Password", { exact: true }).fill(LOGIN);
   await page.getByLabel("Confirm password", { exact: true }).fill(`${LOGIN}x`);
-  await page.getByLabel(/I agree to the Terms/).check();
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page.getByText("Passwords don’t match.")).toBeVisible();
   await expect(page).toHaveURL(/\/signup$/);

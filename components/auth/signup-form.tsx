@@ -6,7 +6,6 @@ import { Check, Loader2 } from "lucide-react";
 
 import { Field } from "@/components/guava/field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { isEmailRegistered, signUp } from "@/lib/auth-actions";
@@ -34,7 +33,6 @@ export function SignupForm() {
   const [confirm, setConfirm] = useState("");
   // The mismatch error shows once they leave the field, not mid-typing.
   const [confirmTouched, setConfirmTouched] = useState(false);
-  const [terms, setTerms] = useState(false);
   const [tried, setTried] = useState(false);
   const [formError, setFormError] = useState("");
   // The last emails the server said are taken (normalized).
@@ -74,7 +72,6 @@ export function SignupForm() {
   const confirmErr = confirmPasswordError(password, confirm);
   const showConfirmErr =
     !!confirmErr && (tried || (confirmTouched && !!confirm));
-  const showTermsErr = tried && !terms;
 
   const emailMessage = taken ? (
     <>
@@ -94,7 +91,7 @@ export function SignupForm() {
     e.preventDefault();
     setTried(true);
     setFormError("");
-    if (nameErr || formatErr || taken || !pwOk || confirmErr || !terms) return;
+    if (nameErr || formatErr || taken || !pwOk || confirmErr) return;
     startTransition(async () => {
       // Redirects to step 2 (connect your database) on success.
       const result = await signUp({
@@ -216,29 +213,6 @@ export function SignupForm() {
           aria-invalid={showConfirmErr || undefined}
         />
       </Field>
-
-      <div className="flex flex-col gap-2">
-        <div className="flex items-start gap-2.5">
-          <Checkbox
-            id="signup-terms"
-            checked={terms}
-            onCheckedChange={(v) => setTerms(v === true)}
-            aria-invalid={showTermsErr || undefined}
-            className="mt-px"
-          />
-          <Label
-            htmlFor="signup-terms"
-            className="text-[13px] leading-[1.45] font-normal text-ink-2"
-          >
-            I agree to the Terms of Service and Privacy Policy.
-          </Label>
-        </div>
-        {showTermsErr && (
-          <p role="alert" className="text-xs text-danger">
-            Please accept the terms to continue.
-          </p>
-        )}
-      </div>
 
       {formError && <FormError>{formError}</FormError>}
 
