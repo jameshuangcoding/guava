@@ -2,7 +2,12 @@ import { getSessionCookie } from "better-auth/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Pages for signed-out visitors. Everything else needs a session.
-const GUEST_ROUTES = ["/login", "/signup"];
+const GUEST_ROUTES = [
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/reset-password",
+];
 
 /**
  * Optimistic auth redirect: no session cookie, no app. This only checks that

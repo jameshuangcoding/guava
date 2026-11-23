@@ -17,16 +17,14 @@ import { PasswordInput } from "./password-input";
 export function LoginForm({ defaultEmail }: { defaultEmail: string }) {
   const [email, setEmail] = useState(defaultEmail);
   const [password, setPassword] = useState("");
-  // Field errors show after a submit attempt (or "Forgot password?" for email).
+  // Field errors show after a submit attempt.
   const [tried, setTried] = useState(false);
-  const [emailTried, setEmailTried] = useState(false);
   const [formError, setFormError] = useState("");
-  const [forgotNote, setForgotNote] = useState("");
   const [isPending, startTransition] = useTransition();
 
   const emailErr = emailError(email);
   const passwordErr = password ? "" : "Enter your password.";
-  const showEmailErr = (tried || emailTried) && !!emailErr;
+  const showEmailErr = tried && !!emailErr;
   const showPasswordErr = tried && !!passwordErr;
 
   function onSubmit(e: React.FormEvent) {
@@ -39,19 +37,6 @@ export function LoginForm({ defaultEmail }: { defaultEmail: string }) {
       const result = await logIn({ email, password });
       if (result.formError) setFormError(result.formError);
     });
-  }
-
-  function onForgot() {
-    if (emailErr) {
-      setEmailTried(true);
-      setForgotNote("");
-      return;
-    }
-    // TODO: request a reset email once lib/auth.ts has an email provider
-    // (sendResetPassword). Until then this is only the note.
-    setForgotNote(
-      `If an account exists for ${email.trim()}, a reset link is on its way.`,
-    );
   }
 
   return (
@@ -74,7 +59,6 @@ export function LoginForm({ defaultEmail }: { defaultEmail: string }) {
           onChange={(e) => {
             setEmail(e.target.value);
             setFormError("");
-            setForgotNote("");
           }}
           placeholder="you@example.com"
           autoComplete="email"
@@ -88,16 +72,18 @@ export function LoginForm({ defaultEmail }: { defaultEmail: string }) {
         label="Password"
         htmlFor="login-password"
         aside={
-          <button
-            type="button"
-            onClick={onForgot}
+          <Link
+            href={
+              emailErr
+                ? "/forgot-password"
+                : `/forgot-password?email=${encodeURIComponent(email.trim())}`
+            }
             className={cn(authLinkClass, "text-xs")}
           >
             Forgot password?
-          </button>
+          </Link>
         }
         error={showPasswordErr ? passwordErr : undefined}
-        hint={forgotNote || undefined}
       >
         <PasswordInput
           id="login-password"
