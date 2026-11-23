@@ -46,6 +46,14 @@ test("sign up, connect a database, and open expenses", async ({ page }) => {
   ).toBeVisible();
   // A brand-new workspace has no transactions yet.
   await expect(page.getByText("0 total transactions")).toBeVisible();
+
+  // The sidebar's community links open the Discord invite in a new tab.
+  for (const name of ["Join our Discord", "Request a feature"]) {
+    const link = page.getByRole("link", { name });
+    await expect(link).toHaveAttribute("href", "https://discord.gg/XeB4FurTAy");
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  }
 });
 
 test("log out and back in", async ({ page }) => {
