@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getAuth } from "@/lib/auth";
@@ -21,7 +21,12 @@ export class UnauthorizedError extends Error {
 const getSession = cache(async () => {
   // Read headers first: during `next build` this marks the route dynamic
   // before anything touches the database.
-  const requestHeaders = await headers();
+  const requestHeaders = new Headers(await headers());
+  // Use the cookie store, not the raw Cookie header: after a Server Action
+  // sets a new session cookie (e.g. changing the password revokes the old
+  // session), Next re-renders the page in the same request, and only
+  // `cookies()` sees the new value.
+  requestHeaders.set("cookie", (await cookies()).toString());
   return getAuth().api.getSession({ headers: requestHeaders });
 });
 
