@@ -18,8 +18,9 @@ if (localProxy) {
   neonConfig.useSecureWebSocket = false;
 }
 
-const OLD_PASSWORD = `e2e-old-${randomUUID()}`;
-const NEW_PASSWORD = `e2e-new-${randomUUID()}`;
+// The test user's logins before and after the reset, made up per run.
+const FIRST_LOGIN = `e2e-${randomUUID()}`;
+const SECOND_LOGIN = `e2e-${randomUUID()}`;
 
 function uniqueEmail() {
   return `e2e-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`;
@@ -52,7 +53,7 @@ test("reset a forgotten password by email", async ({ page }) => {
   await page.goto("/signup");
   await page.getByLabel("Full name").fill("Buzz Peterson");
   await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password", { exact: true }).fill(OLD_PASSWORD);
+  await page.getByLabel("Password", { exact: true }).fill(FIRST_LOGIN);
   await page.getByLabel(/I agree to the Terms/).check();
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page).toHaveURL(/\/connect$/);
@@ -72,7 +73,7 @@ test("reset a forgotten password by email", async ({ page }) => {
   const token = await resetToken(email);
   await page.goto(resetLink(token));
   await expect(page).toHaveURL(/\/reset-password\?token=/);
-  await page.getByLabel("New password").fill(NEW_PASSWORD);
+  await page.getByLabel("New password").fill(SECOND_LOGIN);
   await page.getByRole("button", { name: "Update password" }).click();
   await expect(
     page.getByRole("heading", { name: "Password updated" }),
@@ -86,7 +87,7 @@ test("reset a forgotten password by email", async ({ page }) => {
 
   await page.goto("/login");
   await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password", { exact: true }).fill(NEW_PASSWORD);
+  await page.getByLabel("Password", { exact: true }).fill(SECOND_LOGIN);
   await page.getByRole("button", { name: /log in/i }).click();
   await expect(page).not.toHaveURL(/\/login/);
 });
