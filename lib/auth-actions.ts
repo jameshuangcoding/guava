@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 
 import { getAuth } from "@/lib/auth";
 import {
+  confirmPasswordError,
   EMAIL_MAX,
   emailError,
   NAME_MAX,
@@ -77,17 +78,20 @@ export async function signUp(input: {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }): Promise<AuthFormResult> {
-  const { name, email, password } = input;
+  const { name, email, password, confirmPassword } = input;
   if (
     typeof name !== "string" ||
     typeof email !== "string" ||
     typeof password !== "string" ||
+    typeof confirmPassword !== "string" ||
     !name.trim() ||
     name.trim().length > NAME_MAX ||
     email.trim().length > EMAIL_MAX ||
     emailError(email) ||
-    !passwordOk(password)
+    !passwordOk(password) ||
+    confirmPasswordError(password, confirmPassword)
   ) {
     return { formError: GENERIC_ERROR };
   }
