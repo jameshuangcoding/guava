@@ -102,8 +102,8 @@ export default function TermsPage() {
         <h2>Ending your use</h2>
         <p>
           You can stop using guava at any time. Your database stays in your Neon
-          account. To have your guava account deleted, contact us (there’s no
-          self-serve option in the app yet).
+          account. To delete your guava account, go to Settings, then Account,
+          then Delete account.
         </p>
       </section>
 

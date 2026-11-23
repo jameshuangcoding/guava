@@ -56,6 +56,10 @@ export default function PrivacyPage() {
             in from.
           </li>
           <li>
+            <strong>Password reset requests:</strong> a one-time token for each
+            reset link, which expires after an hour.
+          </li>
+          <li>
             <strong>Your database connection string, encrypted.</strong> It’s
             encrypted with AES-256-GCM before it’s saved, along with your
             database’s name, region and Postgres version for display. It’s never
@@ -112,7 +116,9 @@ export default function PrivacyPage() {
         <ul>
           <li>
             <strong>Session cookies</strong> keep you logged in. They’re
-            required for the app to work and are removed when you log out.
+            required for the app to work and are removed when you log out. If
+            you untick <strong>Remember me</strong> when logging in, the cookie
+            is also removed when you close your browser.
           </li>
           <li>
             <strong>Browser storage</strong> (localStorage) remembers display
@@ -130,10 +136,17 @@ export default function PrivacyPage() {
         <h2>What guava doesn’t do</h2>
         <ul>
           <li>Sell or share your data with advertisers.</li>
-          <li>
-            Send you marketing email. guava doesn’t send email at all yet.
-          </li>
+          <li>Send you marketing email.</li>
         </ul>
+      </section>
+
+      <section>
+        <h2>Email</h2>
+        <p>
+          guava only emails you when you ask it to, such as a password reset
+          link. These emails are sent through Resend, an email delivery service,
+          which receives your email address and the message.
+        </p>
       </section>
 
       <section>
@@ -150,8 +163,9 @@ export default function PrivacyPage() {
         <p>
           Your database is yours: you can export or delete it from your Neon
           account at any time, and guava keeps no copy. To delete your guava
-          account (your login and the encrypted pointer), contact us using the
-          link below. There’s no self-serve way to do this in the app yet.
+          account (your login, sessions and the encrypted pointer), go to
+          Settings, then Account, then Delete account. This doesn’t touch your
+          Neon database.
         </p>
       </section>
 
