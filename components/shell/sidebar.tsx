@@ -2,7 +2,9 @@
 
 import {
   LayoutDashboard,
+  Lightbulb,
   LogOut,
+  MessageCircle,
   PanelLeft,
   Plug,
   Receipt,
@@ -25,6 +27,9 @@ import { useLocalStorage } from "@/lib/use-local-storage";
 import { cn } from "@/lib/utils";
 
 import { NavItem } from "./nav-item";
+
+/** Permanent invite. Feature requests live in the server's #feature-requests forum. */
+const DISCORD_INVITE_URL = "https://discord.gg/XeB4FurTAy";
 
 const isBool = (v: unknown): v is boolean => typeof v === "boolean";
 
@@ -109,6 +114,22 @@ export function Sidebar({ user }: { user: SidebarUser }) {
         label="Settings"
         collapsed={collapsed}
       />
+      <div className="mt-2 flex flex-col gap-0.5 border-t pt-2">
+        <NavItem
+          href={DISCORD_INVITE_URL}
+          icon={<MessageCircle />}
+          label="Join our Discord"
+          collapsed={collapsed}
+          external
+        />
+        <NavItem
+          href={DISCORD_INVITE_URL}
+          icon={<Lightbulb />}
+          label="Request a feature"
+          collapsed={collapsed}
+          external
+        />
+      </div>
       <div className="mt-2 flex items-center gap-2.5 border-t px-1 pt-2">
         <InitialAvatar
           name={displayName}
