@@ -54,6 +54,7 @@ test("reset a forgotten password by email", async ({ page }) => {
   await page.getByLabel("Full name").fill("Buzz Peterson");
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password", { exact: true }).fill(FIRST_LOGIN);
+  await page.getByLabel("Confirm password", { exact: true }).fill(FIRST_LOGIN);
   await page.getByLabel(/I agree to the Terms/).check();
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page).toHaveURL(/\/connect$/);
