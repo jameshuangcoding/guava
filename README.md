@@ -95,7 +95,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Releases are automated by [release-pleas
 ## Known gaps
 
 - Banks sync only when the user clicks **Sync now**. There are no Plaid webhooks yet.
-- There's no password reset until an email provider is added.
+- Log in and forgot password aren't rate limited: the auth forms call Better Auth from Server Actions, which skip its rate limiter.
 
 ## License
 
