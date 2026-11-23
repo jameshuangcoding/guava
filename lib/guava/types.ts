@@ -83,9 +83,8 @@ export type SortKey = "date" | "name" | "amount";
 export type Sort = { key: SortKey; dir: 1 | -1 };
 
 export type Settings = {
+  /** Auto-review recurring bills (see lib/recurring-bills.ts). */
   autoBills: boolean;
-  weekly: boolean;
-  big: boolean;
 };
 
 export type DayTotal = { sum: number; n: number };

@@ -351,8 +351,6 @@ export async function deleteSubcategory(
 
 const SETTING_COLUMNS = {
   autoBills: "autoCategorizeBills",
-  weekly: "weeklyReminder",
-  big: "bigPurchaseAlert",
 } as const satisfies Record<keyof Settings, string>;
 
 export async function setSetting(key: keyof Settings, value: boolean) {

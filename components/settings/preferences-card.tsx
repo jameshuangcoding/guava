@@ -14,17 +14,8 @@ const TOGGLES: { key: keyof Settings; title: string; description: string }[] = [
   {
     key: "autoBills",
     title: "Auto-review recurring bills",
-    description: "Bills that match last month’s amount skip the review queue.",
-  },
-  {
-    key: "weekly",
-    title: "Weekly review reminder",
-    description: "Get a nudge on Sundays when items are waiting for review.",
-  },
-  {
-    key: "big",
-    title: "Flag large purchases",
-    description: "Anything over $150 always lands in Needs review.",
+    description:
+      "New bank charges that match one you reviewed last month (same name, amount and account) get its category and skip the review queue.",
   },
 ];
 
